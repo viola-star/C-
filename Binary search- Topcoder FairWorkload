@@ -1,0 +1,54 @@
+#include <iostream>
+#include <vector>
+#define pb push_back
+using namespace std;
+
+
+int get_noofworkers(vector <int> cabinetwisefolders, int noofcabinets, int maxfolders)
+{
+    int noofworkers = 1, curr_sumoffolders = 0, i;
+    for (i=0; i<noofcabinets; i++)
+    {
+        if (curr_sumoffolders + cabinetwisefolders[i] > maxfolders)
+        {
+            curr_sumoffolders = 0;
+            noofworkers++;
+        }
+        curr_sumoffolders += cabinetwisefolders[i];
+    }
+    return noofworkers;
+}
+
+
+int main() 
+{
+	int noofavailableworkers, i, maxfolders, x, low, high=0, mid;
+	cin>> noofavailableworkers;
+	vector <int> cabinetwisefolders;
+	
+	while(cin>> x)
+	{
+	    cabinetwisefolders.pb(x); //ith cabinet has cabinetwisefolders[i] folders 
+	    low = max(x, low);
+	    high += x;
+	}
+	
+	int noofcabinets = cabinetwisefolders.size(), noofworkers;
+	// if maxfolders is max element of cabinetwisefolders, then no of workers = noofcabinets
+	// if maxfolders is sum of all cabinetwise folders, n of workers = 1 
+	// thus maxfolders is between these such that it is the minimum value at which 
+	// no of workers <= noofavailableworkers 
+    while(low < high)
+    {
+        mid = low + (high - low) / 2 ;
+        noofworkers = get_noofworkers(cabinetwisefolders, noofcabinets, mid);
+        if (noofworkers <= noofavailableworkers)
+            high = mid;
+        else
+            low = mid + 1;
+    }// if mid is true last is mid
+    
+    cout << low;
+    
+	return 0;
+}
